@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280,initial-scale=1">
+<title>Bimbel.in — Interactive Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --p:#2563EB;--ph:#1D4ED8;--ps:#DBEAFE;--pf:#EFF6FF;
+  --s:#FFFFFF;--sm:#F8FAFC;--st:#F0F6FF;
+  --t:#0F172A;--tm:#475569;--tf:#94A3B8;
+  --ok:#10B981;--oks:#D1FAE5;
+  --wn:#F59E0B;--wns:#FEF3C7;
+  --er:#EF4444;--ers:#FEE2E2;
+  --bd:#E2E8F0;--bds:#CBD5E1;
+  --fn:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+body{font-family:var(--fn);background:#DDE6F0;min-height:100vh;}
+#iw{display:flex;flex-direction:column;align-items:center;padding:28px 24px 64px;}
+#fw{display:none;padding:28px 24px 64px;}
+#topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
+.logo{font-size:17px;font-weight:800;color:var(--p);letter-spacing:-.02em;}
+.logo em{font-style:normal;font-weight:400;font-size:12px;color:var(--tm);margin-left:4px;}
+.mtog{display:flex;background:white;border-radius:99px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.mbtn{padding:5px 13px;border-radius:99px;border:none;cursor:pointer;font-family:var(--fn);font-size:11px;font-weight:700;background:transparent;color:var(--tm);transition:.15s;}
+.mbtn.on{background:var(--p);color:white;}
+#slbl{font-size:11px;color:var(--tm);font-weight:600;background:white;padding:4px 12px;border-radius:99px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+#ftbtn{padding:5px 14px;border-radius:99px;border:1.5px solid var(--bds);cursor:pointer;font-family:var(--fn);font-size:11px;font-weight:700;color:var(--tm);background:white;}
+#ftbtn:hover{border-color:var(--p);color:var(--p);}
+#phone{width:260px;height:562px;background:var(--s);border-radius:36px;border:1.5px solid #BCC8D8;box-shadow:0 20px 56px rgba(15,23,42,.2),0 4px 12px rgba(15,23,42,.07);overflow:hidden;position:relative;}
+#sbar{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9.5px;font-weight:700;z-index:30;}
+#sbar.l{color:var(--t);}
+#sbar.d{color:rgba(255,255,255,.92);}
+#scr{position:absolute;top:26px;left:0;right:0;bottom:52px;overflow:hidden;}
+#scr.nn{bottom:0;}
+#bnav{position:absolute;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-around;z-index:30;padding:0 4px;}
+#bnav.lnv{background:var(--s);border-top:1px solid var(--bd);}
+#bnav.dnv{background:rgba(8,16,34,.9);border-top:1px solid rgba(255,255,255,.07);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;cursor:pointer;user-select:none;}
+.ni-i{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--tf);}
+.ni-l{font-size:7px;font-weight:600;color:var(--tf);}
+.ni.on .ni-i{background:var(--pf);color:var(--p);}
+.ni.on .ni-l{color:var(--p);}
+.ni.ctr .ni-i{background:var(--p);color:white;width:30px;height:30px;border-radius:10px;}
+#bnav.dnv .ni-i{color:rgba(255,255,255,.4);}
+#bnav.dnv .ni-l{color:rgba(255,255,255,.4);}
+#bnav.dnv .ni.on .ni-i{background:rgba(255,255,255,.15);color:white;}
+#bnav.dnv .ni.on .ni-l{color:white;}
+#bnav.dnv .ni.ctr .ni-i{background:var(--p);color:white;}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:white;flex-shrink:0;}
+.bdg{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:99px;font-size:8px;font-weight:700;}
+.bv{background:var(--oks);color:var(--ok);}
+.ba{background:var(--ps);color:var(--p);}
+.bt{background:var(--wns);color:var(--wn);}
+.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:8px;font-weight:600;background:var(--st);color:var(--tm);}
+.stile{background:var(--s);border-radius:10px;padding:9px 8px;box-shadow:0 1px 3px rgba(15,23,42,.07);}
+.sv{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;}
+.sl{font-size:7.5px;font-weight:600;color:var(--tm);margin-top:2px;}
+.pbtn{background:var(--p);color:white;border:none;border-radius:10px;font-family:var(--fn);font-weight:700;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,99,235,.22);transition:.1s;}
+.pbtn:hover{background:var(--ph);}
+.pbtn:active{transform:scale(.97);}
+.sbtn{background:var(--s);color:var(--p);border:1.5px solid var(--p);border-radius:8px;font-family:var(--fn);font-weight:700;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sh2{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.sttl{font-size:11px;font-weight:700;}
+.slnk{font-size:9px;font-weight:600;color:var(--p);cursor:pointer;}
+.scrl{height:100%;overflow-y:auto;overflow-x:hidden;background:var(--sm);}
+.scrl::-webkit-scrollbar{display:none;}
+.spill{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:7.5px;font-weight:700;}
+.spt{background:var(--ps);color:var(--p);}
+.spm{background:var(--wns);color:var(--wn);}
+.sps{background:var(--oks);color:var(--ok);}
+.mrow{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-bottom:1px solid var(--bd);cursor:pointer;}
+.mrow:last-child{border-bottom:none;}
+.mrow:hover{background:var(--sm);}
+.mlbl{font-size:10px;font-weight:600;color:var(--t);}
+.mchv{font-size:13px;color:var(--tf);}
+@keyframes sIn{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+@keyframes sBack{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:translateX(0);}}
+.si{animation:sIn .18s ease-out;}
+.sb2{animation:sBack .18s ease-out;}
+@keyframes ck{0%{transform:scale(0);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.ck-a{animation:ck .4s ease-out forwards;}
+#fw{padding:28px 24px 64px;}
+.fhdr{text-align:center;margin-bottom:24px;}
+.fhdr h2{font-size:20px;font-weight:800;color:var(--t);margin-bottom:4px;}
+.fhdr p{font-size:12px;color:var(--tm);}
+.fsec{font-size:10px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.14em;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+.fsec::after{content:'';flex:1;height:1px;background:var(--bd);}
+.fgrid{display:flex;flex-wrap:wrap;gap:16px;}
+.ffrm{display:flex;flex-direction:column;align-items:center;gap:7px;}
+.flbl{font-size:9px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;}
+.fphone{width:260px;height:562px;background:var(--s);border-radius:36px;border:1.5px solid #BCC8D8;box-shadow:0 8px 24px rgba(15,23,42,.12);overflow:hidden;position:relative;}
+.fsb{position:absolute;top:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9.5px;font-weight:700;z-index:10;}
+.fsb.l{color:var(--t);}
+.fsb.d{color:rgba(255,255,255,.92);}
+.fcnt{position:absolute;top:26px;left:0;right:0;bottom:52px;overflow:hidden;}
+.fcnt.nn{bottom:0;}
+.fnav{position:absolute;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-around;z-index:10;padding:0 4px;}
+.fnav.lnv{background:var(--s);border-top:1px solid var(--bd);}
+.fnav.dnv{background:rgba(8,16,34,.9);}
+.fnav .ni-i{color:var(--tf);}
+.fnav.dnv .ni-i{color:rgba(255,255,255,.4);}
+.fnav.dnv .ni-l{color:rgba(255,255,255,.4);}
+.fnav .ni.on .ni-i{background:var(--pf);color:var(--p);}
+.fnav .ni.on .ni-l{color:var(--p);}
+.fnav.dnv .ni.on .ni-i{background:rgba(255,255,255,.15);color:white;}
+.fnav.dnv .ni.on .ni-l{color:white;}
+.fnav .ni.ctr .ni-i{background:var(--p);color:white;width:30px;height:30px;border-radius:10px;}
+</style>
+</head>
+<body>
+<div id="iw">
+  <div id="topbar">
+    <div class="logo">Bimbel.in<em>Interactive Prototype</em></div>
+    <div class="mtog">
+      <button class="mbtn on" id="ms" onclick="setMode('student')">Student</button>
+      <button class="mbtn" id="mt" onclick="setMode('teacher')">Teacher</button>
+    </div>
+    <div id="slbl">Student Home</div>
+    <button id="ftbtn" onclick="toggleFigma()">Figma Mode ↗</button>
+  </div>
+  <div id="phone">
+    <div id="sbar" class="l"><span>09:41</span><div style="display:flex;gap:3px;font-size:8px;"><span>▲</span><span>◀</span><span>●●●</span></div></div>
+    <div id="scr"></div>
+    <div id="bnav" class="lnv"></div>
+  </div>
+</div>
+<div id="fw">
+  <div class="fhdr"><h2>All Frames — Figma Export</h2><p>Use the HTML to Figma plugin (Builder.io) to capture all 16 screens at once.</p></div>
+  <button onclick="toggleFigma()" style="display:block;margin:0 auto 24px;padding:7px 20px;border-radius:99px;border:1.5px solid var(--bd);background:white;cursor:pointer;font-family:var(--fn);font-size:12px;font-weight:700;color:var(--tm);">← Back to Prototype</button>
+  <div id="fgrid-wrap"></div>
+</div>
+<script>
+const I={
+  house:`<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 8v10h5v-5h6v5h5V8z"/></svg>`,
+  search:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="5"/><line x1="12" y1="12" x2="17" y2="17"/></svg>`,
+  play:`<svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l12 6-12 6V4z"/></svg>`,
+  book:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="14" height="14" rx="2"/><line x1="7" y1="7" x2="13" y2="7"/><line x1="7" y1="11" x2="10" y2="11"/></svg>`,
+  person:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="7" r="3.5"/><path d="M3 18c0-4 3-7 7-7s7 3 7 7"/></svg>`,
+  cal:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="6"/><line x1="13" y1="2" x2="13" y2="6"/></svg>`,
+  doc:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="12" height="16" rx="2"/><line x1="7" y1="7" x2="13" y2="7"/><line x1="7" y1="11" x2="13" y2="11"/><line x1="7" y1="15" x2="10" y2="15"/></svg>`,
+  back:`<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><line x1="13" y1="5" x2="7" y2="10"/><line x1="7" y1="10" x2="13" y2="15"/></svg>`,
+  chv:`<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="5" x2="13" y2="10"/><line x1="13" y1="10" x2="7" y2="15"/></svg>`,
+};
+
+function navS(a){
+  return [
+    {id:'home',ic:I.house,l:'Home',t:'home'},
+    {id:'cari',ic:I.search,l:'Cari',t:'cari'},
+    {id:'reels',ic:I.play,l:'Reels',t:'reels',c:true},
+    {id:'kursus',ic:I.book,l:'Kursus',t:'my_courses'},
+    {id:'profil',ic:I.person,l:'Profil',t:'s_profil'},
+  ].map(x=>`<div class="ni${x.c?' ctr':''}${a===x.id?' on':''}" data-nav="${x.t}"><div class="ni-i">${x.ic}</div><div class="ni-l">${x.l}</div></div>`).join('');
+}
+function navT(a){
+  return [
+    {id:'home',ic:I.house,l:'Home',t:'dashboard'},
+    {id:'sesi',ic:I.cal,l:'Sesi',t:'t_sesi'},
+    {id:'reels',ic:I.play,l:'Reels',t:'reels_mgmt',c:true},
+    {id:'portfolio',ic:I.doc,l:'Portfolio',t:'portfolio'},
+    {id:'profil',ic:I.person,l:'Profil',t:'t_profil'},
+  ].map(x=>`<div class="ni${x.c?' ctr':''}${a===x.id?' on':''}" data-nav="${x.t}"><div class="ni-i">${x.ic}</div><div class="ni-l">${x.l}</div></div>`).join('');
+}
+
+const CFG={
+  home:      {nav:'student',a:'home',  dk:false,lbl:'Student Home'},
+  reels:     {nav:'student',a:'reels', dk:true, lbl:'Reels Feed'},
+  profile:   {nav:'student',a:'cari',  dk:false,lbl:'Teacher Profile'},
+  booking:   {nav:null,lbl:'Booking'},
+  confirmed: {nav:null,lbl:'Booking Confirmed'},
+  my_courses:{nav:'student',a:'kursus',dk:false,lbl:'My Courses'},
+  session:   {nav:null,lbl:'Session Detail'},
+  cari:      {nav:'student',a:'cari',  dk:false,lbl:'Cari Guru'},
+  s_profil:  {nav:'student',a:'profil',dk:false,lbl:'Profil Saya'},
+  dashboard: {nav:'teacher',a:'home',  dk:false,lbl:'Dashboard'},
+  book_req:  {nav:null,lbl:'Booking Request'},
+  reels_mgmt:{nav:'teacher',a:'reels', dk:false,lbl:'Reels'},
+  portfolio: {nav:'teacher',a:'portfolio',dk:false,lbl:'Portfolio'},
+  earnings:  {nav:'teacher',a:'home',  dk:false,lbl:'Earnings'},
+  t_sesi:    {nav:'teacher',a:'sesi',  dk:false,lbl:'Sesi Saya'},
+  t_profil:  {nav:'teacher',a:'profil',dk:false,lbl:'Profil & Pengaturan'},
+};
+
+const S={
+
+home:()=>`<div class="scrl">
+<div style="background:white;padding:10px 12px 8px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+    <div><div style="font-size:12px;font-weight:800;">Halo, Sarah! &#x1F44B;</div><div style="font-size:8px;color:var(--tm);margin-top:1px;">Mau belajar apa hari ini?</div></div>
+    <div style="position:relative;"><div style="width:30px;height:30px;border-radius:50%;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:14px;">&#x1F514;</div><div style="position:absolute;top:1px;right:1px;width:7px;height:7px;background:var(--er);border-radius:50%;border:1.5px solid white;"></div></div>
+  </div>
+  <div style="background:var(--st);border-radius:99px;height:34px;display:flex;align-items:center;padding:0 12px;gap:7px;cursor:pointer;" data-nav="cari">
+    <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="var(--tm)" stroke-width="2"><circle cx="8" cy="8" r="5"/><line x1="12" y1="12" x2="17" y2="17"/></svg>
+    <span style="font-size:9px;color:var(--tf);">Cari guru atau mata pelajaran...</span>
+  </div>
+</div>
+<div style="padding:6px 12px 0;">
+  <div style="border-radius:16px;overflow:hidden;cursor:pointer;position:relative;background:linear-gradient(135deg,#1B3A8A 0%,#2563EB 55%,#38BDF8 100%);" data-nav="cari">
+    <div style="position:absolute;right:-12px;top:-12px;width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.06);"></div>
+    <div style="position:absolute;right:18px;bottom:-8px;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.04);"></div>
+    <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:38px;font-weight:800;color:rgba(255,255,255,.07);line-height:1;letter-spacing:-.02em;pointer-events:none;">&#x2211;&#x3C0;</div>
+    <div style="padding:13px 14px;position:relative;z-index:1;">
+      <div style="font-size:7px;color:rgba(255,255,255,.68);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;">&#x1F393; 12.000+ Guru Honorer Terverifikasi</div>
+      <div style="font-size:13px;font-weight:800;color:white;line-height:1.28;margin-bottom:10px;">Temukan guru terbaik<br/>di sekitarmu sekarang.</div>
+      <div style="display:inline-flex;align-items:center;background:rgba(255,255,255,.95);border-radius:99px;padding:5px 12px;gap:4px;">
+        <span style="font-size:9px;font-weight:700;color:#1B3A8A;">Cari Guru</span>
+        <span style="font-size:10px;color:#1B3A8A;font-weight:800;">&#x2192;</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;">
+  <div class="sh2" style="margin-bottom:3px;"><div style="display:flex;align-items:center;gap:5px;"><div style="background:var(--p);color:white;border-radius:5px;padding:2px 5px;font-size:7px;font-weight:800;letter-spacing:.04em;">AI</div><span class="sttl">Rekomendasi untuk Kamu</span></div><span class="slnk">Lihat semua &#x2192;</span></div>
+  <div style="font-size:7.5px;color:var(--tf);margin-bottom:8px;">Berdasarkan riwayat belajar &amp; lokasimu</div>
+  <div class="stile" style="border-radius:10px;margin-bottom:6px;padding:9px;cursor:pointer;" data-nav="profile">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="position:relative;flex-shrink:0;"><div class="av" style="width:42px;height:42px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:14px;">AF</div><div class="bdg bt" style="position:absolute;bottom:-3px;right:-5px;font-size:6.5px;padding:1px 3px;border:1px solid white;">&#x2605;</div></div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;"><span style="font-size:10px;font-weight:700;">Pak Ahmad Fauzi</span><span style="font-size:9px;font-weight:700;color:var(--p);white-space:nowrap;">Rp 80K</span></div>
+        <div style="font-size:8px;color:var(--tm);margin-top:1px;">Matematika &#x00B7; Fisika &#x00B7; SMP</div>
+        <div style="font-size:8px;color:var(--tf);margin-top:1px;">&#x1F4CD; 2.3 km &nbsp;&#x00B7;&nbsp; &#x2B50; 4.9 (47)</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;"><span style="display:inline-flex;padding:2px 7px;border-radius:99px;font-size:7.5px;font-weight:700;background:var(--oks);color:var(--ok);">&#x1F501; 82% rebook</span><span style="font-size:8.5px;font-weight:700;color:var(--p);">Lihat Profil &#x2192;</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="stile" style="border-radius:10px;padding:9px;position:relative;cursor:pointer;" data-nav="profile">
+    <div style="position:absolute;top:-1px;right:8px;background:var(--wns);border-radius:0 0 5px 5px;padding:1px 6px;font-size:6.5px;font-weight:700;color:var(--wn);">Sedikit di atas budgetmu</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+      <div style="position:relative;flex-shrink:0;"><div class="av" style="width:42px;height:42px;background:linear-gradient(135deg,#10B981,#059669);font-size:14px;">SD</div><div class="bdg ba" style="position:absolute;bottom:-3px;right:-5px;font-size:6.5px;padding:1px 3px;border:1px solid white;">&#x26A1;</div></div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;"><span style="font-size:10px;font-weight:700;">Bu Sari Dewi</span><span style="font-size:9px;font-weight:700;color:var(--p);white-space:nowrap;">Rp 95K</span></div>
+        <div style="font-size:8px;color:var(--tm);margin-top:1px;">Fisika &#x00B7; Kimia &#x00B7; SMA</div>
+        <div style="font-size:8px;color:var(--tf);margin-top:1px;">&#x1F4CD; 3.8 km &nbsp;&#x00B7;&nbsp; &#x2B50; 4.7 (31)</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;"><span style="display:inline-flex;padding:2px 7px;border-radius:99px;font-size:7.5px;font-weight:700;background:var(--oks);color:var(--ok);">&#x1F501; 71% rebook</span><span style="font-size:8.5px;font-weight:700;color:var(--p);">Lihat Profil &#x2192;</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;">
+  <div class="sttl" style="margin-bottom:7px;">Cari Berdasarkan Mapel</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+    <div style="background:var(--pf);border:1px solid var(--ps);border-radius:9px;padding:7px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;" data-nav="cari"><span style="font-size:14px;">&#x1F4D0;</span><span style="font-size:9px;font-weight:700;color:var(--p);">Matematika</span></div>
+    <div style="background:var(--st);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;" data-nav="cari"><span style="font-size:14px;">&#x2697;&#xFE0F;</span><span style="font-size:9px;font-weight:700;color:var(--tm);">Fisika</span></div>
+    <div style="background:var(--st);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;" data-nav="cari"><span style="font-size:14px;">&#x1F9EA;</span><span style="font-size:9px;font-weight:700;color:var(--tm);">Kimia</span></div>
+    <div style="background:var(--st);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;" data-nav="cari"><span style="font-size:14px;">&#x1F30F;</span><span style="font-size:9px;font-weight:700;color:var(--tm);">B. Inggris</span></div>
+  </div>
+</div>
+<div style="height:8px;"></div>
+</div>`,
+
+cari:()=>`<div class="scrl">
+<div style="background:white;padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);">
+  <span style="font-size:13px;font-weight:800;flex:1;">Cari Guru</span>
+  <span style="font-size:10px;color:var(--p);font-weight:700;cursor:pointer;" data-nav="home">&#x2715;</span>
+</div>
+<div style="background:white;padding:8px 12px 10px;border-bottom:1px solid var(--bd);">
+  <div style="background:var(--pf);border:2px solid var(--p);border-radius:99px;height:36px;display:flex;align-items:center;padding:0 12px;gap:8px;">
+    <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="var(--p)" stroke-width="2"><circle cx="8" cy="8" r="5"/><line x1="12" y1="12" x2="17" y2="17"/></svg>
+    <span style="font-size:9px;color:var(--p);font-weight:500;flex:1;">Matematika SMP...</span>
+    <span style="font-size:11px;color:var(--p);font-weight:700;cursor:pointer;">&#x2715;</span>
+  </div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;">
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Mata Pelajaran</div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--p);background:var(--p);font-size:8.5px;font-weight:700;color:white;cursor:pointer;">Matematika</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Fisika</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Kimia</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">B. Inggris</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Sejarah</div>
+  </div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Jenjang</div>
+  <div style="display:flex;gap:4px;margin-bottom:10px;">
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;">SD</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--p);background:var(--p);font-size:8.5px;font-weight:700;color:white;cursor:pointer;">SMP</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;">SMA</div>
+    <div style="padding:4px 10px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;">Kuliah</div>
+  </div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Mode Belajar</div>
+  <div style="display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--p);margin-bottom:2px;">
+    <div style="flex:1;text-align:center;padding:6px;background:var(--p);font-size:9px;font-weight:700;color:white;cursor:pointer;">Tatap Muka</div>
+    <div style="flex:1;text-align:center;padding:6px;font-size:9px;font-weight:700;color:var(--p);cursor:pointer;">Online</div>
+    <div style="flex:1;text-align:center;padding:6px;font-size:9px;font-weight:700;color:var(--p);cursor:pointer;">Semua</div>
+  </div>
+</div>
+<div style="height:6px;"></div>
+<div style="padding:0 12px;">
+  <div class="pbtn" style="height:38px;font-size:11px;border-radius:10px;" data-nav="profile">Cari Guru &#x2192;</div>
+</div>
+<div style="height:10px;"></div>
+<div style="background:white;padding:10px 12px;">
+  <div class="sttl" style="margin-bottom:8px;">Pencarian Populer</div>
+  <div style="display:flex;flex-wrap:wrap;gap:5px;">
+    <div style="padding:4px 10px;border-radius:99px;background:var(--st);border:1px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Matematika SMP</div>
+    <div style="padding:4px 10px;border-radius:99px;background:var(--st);border:1px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Fisika SMA</div>
+    <div style="padding:4px 10px;border-radius:99px;background:var(--st);border:1px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">B. Inggris</div>
+    <div style="padding:4px 10px;border-radius:99px;background:var(--st);border:1px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Kimia SMA</div>
+    <div style="padding:4px 10px;border-radius:99px;background:var(--st);border:1px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;" data-nav="profile">Matematika SD</div>
+  </div>
+</div>
+<div style="height:8px;"></div>
+</div>`,
+
+s_profil:()=>`<div class="scrl">
+<div style="background:white;padding:8px 12px;font-size:14px;font-weight:800;border-bottom:1px solid var(--bd);">Profil Saya</div>
+<div style="background:white;padding:16px 12px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;border-bottom:1px solid var(--bd);">
+  <div class="av" style="width:56px;height:56px;background:linear-gradient(135deg,#8B5CF6,#6366F1);font-size:18px;">SR</div>
+  <div style="font-size:13px;font-weight:800;">Sarah Ramadhani</div>
+  <div style="font-size:8.5px;color:var(--tm);">sarah.ramadhani@email.com</div>
+  <div style="margin-top:3px;padding:4px 12px;border-radius:99px;border:1.5px solid var(--bd);font-size:8.5px;font-weight:600;color:var(--tm);cursor:pointer;">Edit Profil</div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--bd);border-radius:10px;overflow:hidden;">
+    <div style="padding:9px 6px;text-align:center;border-right:1px solid var(--bd);"><div style="font-size:16px;font-weight:800;color:var(--p);">2</div><div style="font-size:7.5px;color:var(--tf);margin-top:1px;">Sesi</div></div>
+    <div style="padding:9px 6px;text-align:center;border-right:1px solid var(--bd);"><div style="font-size:16px;font-weight:800;color:var(--p);">3</div><div style="font-size:7.5px;color:var(--tf);margin-top:1px;">Favorit</div></div>
+    <div style="padding:9px 6px;text-align:center;"><div style="font-size:13px;font-weight:800;color:var(--p);">175K</div><div style="font-size:7.5px;color:var(--tf);margin-top:1px;">Total Bayar</div></div>
+  </div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;">
+  <div class="mrow" data-nav="my_courses"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F4DA;</span><span class="mlbl">Riwayat Sesi</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x2764;&#xFE0F;</span><span class="mlbl">Guru Favorit</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;color:var(--p);font-weight:700;">3 guru</span><span class="mchv">${I.chv}</span></div></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F4B3;</span><span class="mlbl">Metode Pembayaran</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;color:var(--tm);">GoPay</span><span class="mchv">${I.chv}</span></div></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F514;</span><span class="mlbl">Notifikasi</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x2753;</span><span class="mlbl">Bantuan &amp; FAQ</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow" style="border-bottom:none;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F6AA;</span><span class="mlbl" style="color:var(--er);">Keluar</span></div></div>
+</div>
+<div style="height:8px;"></div>
+</div>`,
+
+reels:()=>`<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,#1A3374 0%,#2055C5 40%,#3B82F6 100%);overflow:hidden;">
+  <div style="position:absolute;top:60px;left:50%;transform:translateX(-50%);font-size:48px;font-weight:800;color:rgba(255,255,255,.06);pointer-events:none;line-height:1.3;text-align:center;">lim<br/>x&#x2192;&#x221E;<br/>f(x)</div>
+  <div style="position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(10,18,35,.42);border-radius:18px;padding:3px;display:flex;z-index:5;white-space:nowrap;">
+    <div style="padding:3px 11px;background:rgba(255,255,255,.22);border-radius:14px;font-size:8.5px;font-weight:700;color:white;">Untukmu</div>
+    <div style="padding:3px 11px;font-size:8.5px;font-weight:600;color:rgba(255,255,255,.55);">Mengikuti</div>
+  </div>
+  <div style="position:absolute;top:76px;left:11px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:3px 9px;font-size:8px;font-weight:700;color:white;z-index:5;">Matematika &#x00B7; SMP</div>
+  <div style="position:absolute;right:10px;top:42%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:13px;z-index:5;">
+    <div style="text-align:center;"><div style="font-size:22px;line-height:1;">&#x1F90D;</div><div style="font-size:7.5px;color:white;font-weight:700;margin-top:2px;">1.2K</div></div>
+    <div style="text-align:center;"><div style="font-size:20px;line-height:1;">&#x1F4AC;</div><div style="font-size:7.5px;color:white;font-weight:700;margin-top:2px;">48</div></div>
+    <div style="text-align:center;"><div style="font-size:18px;color:white;font-weight:700;line-height:1;">&#x2197;</div><div style="font-size:7.5px;color:rgba(255,255,255,.85);font-weight:700;margin-top:2px;">Share</div></div>
+    <div style="font-size:19px;line-height:1;">&#x1F516;</div>
+  </div>
+  <div style="position:absolute;bottom:48px;left:0;right:0;padding:10px 12px 12px;background:linear-gradient(to top,rgba(8,16,34,.9) 0%,transparent 100%);">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px;">
+      <div class="av" style="width:28px;height:28px;background:linear-gradient(135deg,#60A5FA,#2563EB);font-size:9px;">AF</div>
+      <div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;"><span style="font-size:10px;font-weight:700;color:white;">Pak Ahmad Fauzi</span><span class="bdg ba" style="font-size:7px;padding:1px 5px;">&#x26A1;</span></div></div>
+      <div style="border:1.5px solid rgba(255,255,255,.8);border-radius:99px;padding:2px 9px;font-size:8px;font-weight:700;color:white;flex-shrink:0;cursor:pointer;">Ikuti</div>
+    </div>
+    <div style="font-size:9px;color:rgba(255,255,255,.88);line-height:1.4;padding-left:35px;">Cara mudah pahami limit tak hingga &#x2014; dari soal UN 2023 &#x1F525;</div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(135deg,#064E3B,#059669);display:flex;align-items:center;padding:0 12px;gap:6px;opacity:.88;cursor:pointer;" data-nav="profile">
+    <div style="background:rgba(255,255,255,.22);border-radius:99px;padding:2px 8px;font-size:7.5px;font-weight:700;color:white;">Fisika &#x00B7; SMA</div>
+    <div style="font-size:8px;color:rgba(255,255,255,.7);">Bu Sari Dewi</div>
+  </div>
+  <div style="position:absolute;top:26px;left:0;right:0;bottom:48px;cursor:pointer;z-index:3;" data-nav="profile"></div>
+</div>`,
+
+profile:()=>`<div class="scrl" style="background:var(--sm);">
+<div style="background:white;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);">
+  <span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span>
+  <span style="font-size:11px;font-weight:700;">Profil Guru</span>
+  <span style="font-size:13px;color:var(--tm);">&#x22EF;</span>
+</div>
+<div style="background:white;padding:13px 12px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+  <div style="position:relative;display:inline-block;"><div class="av" style="width:54px;height:54px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:17px;">AF</div><div class="bdg bt" style="position:absolute;bottom:-3px;right:-6px;font-size:7px;padding:1px 4px;border:1.5px solid white;">&#x2605; Trusted</div></div>
+  <div style="font-size:13.5px;font-weight:800;color:var(--t);letter-spacing:-.01em;">Pak Ahmad Fauzi</div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;"><span class="bdg bv" style="font-size:7.5px;">&#x2713; Verified Teacher</span><span class="tag">&#x1F3EB; SMPN 12 Jakarta</span></div>
+  <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:center;"><span class="tag">Matematika</span><span class="tag">Fisika</span><span class="tag">SMP</span><span class="tag">SMA</span></div>
+  <div style="font-size:8px;color:var(--tm);">&#x2B50; 4.9 (47 ulasan) &#x00B7; &#x1F4CD; 2.3 km &#x00B7; <strong style="color:var(--t);">Rp 80.000/sesi</strong></div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><div class="stile"><div class="sv" style="color:var(--p);">124</div><div class="sl">Total Sesi</div></div><div class="stile"><div class="sv" style="color:var(--p);">38</div><div class="sl">Total Murid</div></div><div class="stile"><div class="sv" style="color:var(--ok);">82%</div><div class="sl">Repeat Booking</div></div><div class="stile"><div class="sv" style="color:var(--wn);">4.9&#x2605;</div><div class="sl">Avg Rating</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sh2"><span class="sttl">Konten Pengajaran</span><span class="slnk">Lihat semua &#x2192;</span></div><div style="display:flex;gap:6px;"><div style="width:68px;height:68px;border-radius:8px;background:linear-gradient(135deg,#1E40AF,#3B82F6);position:relative;overflow:hidden;flex-shrink:0;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:rgba(255,255,255,.15);">&#x221E;</div><div style="position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.5);border-radius:4px;padding:1px 4px;font-size:6.5px;color:white;font-weight:700;">Mat</div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:18px;height:18px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;">&#x25B6;</div></div></div><div style="width:68px;height:68px;border-radius:8px;background:linear-gradient(135deg,#4C1D95,#7C3AED);position:relative;overflow:hidden;flex-shrink:0;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:rgba(255,255,255,.15);">F=ma</div><div style="position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.5);border-radius:4px;padding:1px 4px;font-size:6.5px;color:white;font-weight:700;">Fis</div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:18px;height:18px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;">&#x25B6;</div></div></div><div style="width:68px;height:68px;border-radius:8px;background:linear-gradient(135deg,#065F46,#10B981);position:relative;overflow:hidden;flex-shrink:0;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:rgba(255,255,255,.15);">x&#xB2;</div><div style="position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.5);border-radius:4px;padding:1px 4px;font-size:6.5px;color:white;font-weight:700;">Mat</div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:18px;height:18px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;">&#x25B6;</div></div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:var(--oks);border-left:3px solid var(--ok);padding:8px 12px;"><div style="font-size:10px;font-weight:800;color:var(--ok);">&#x1F501; 82% murid booking lagi</div><div style="font-size:8px;color:#047857;margin-top:2px;line-height:1.35;">Bukan sekadar rating &#x2014; ini pilihan nyata murid yang sudah merasakan.</div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sh2"><span class="sttl">Ulasan</span><span class="slnk">47 ulasan &#x2192;</span></div><div style="font-size:8.5px;color:var(--t);border-bottom:1px solid var(--bd);padding-bottom:6px;margin-bottom:5px;"><strong>Orang Tua Murid A</strong> <span style="color:var(--wn);">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</span><br/>"Pak Ahmad sabar dan penjelasannya mudah dipahami. Nilai anak saya naik signifikan."</div><div style="font-size:8.5px;color:var(--t);"><strong>Budi S.</strong> <span style="color:var(--wn);">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</span><br/>"Cara mengajar menyenangkan, tidak membosankan. Highly recommended!"</div></div>
+<div style="height:64px;"></div>
+</div>
+<div style="position:absolute;bottom:52px;left:0;right:0;background:white;border-top:1px solid var(--bd);padding:7px 12px;">
+  <div class="pbtn" style="height:36px;font-size:11px;border-radius:10px;" data-nav="booking">Booking Sesi</div>
+</div>`,
+
+booking:()=>`<div class="scrl" style="background:var(--sm);">
+<div style="background:white;padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);"><span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span><span style="font-size:11px;font-weight:700;flex:1;text-align:center;">Booking Sesi</span><span style="width:16px;"></span></div>
+<div style="display:flex;justify-content:center;gap:5px;padding:7px 0 6px;background:white;border-bottom:1px solid var(--bd);"><div style="width:22px;height:4px;border-radius:2px;background:var(--p);"></div><div style="width:22px;height:4px;border-radius:2px;background:var(--bd);"></div><div style="width:22px;height:4px;border-radius:2px;background:var(--bd);"></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;">
+  <div style="background:var(--st);border-radius:10px;padding:9px;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div class="av" style="width:32px;height:32px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:11px;">AF</div><div style="flex:1;"><div style="font-size:10px;font-weight:700;">Pak Ahmad Fauzi</div><div style="font-size:8px;color:var(--tm);">Matematika &#x00B7; SMP</div></div><div style="font-size:10px;font-weight:700;color:var(--p);">Rp 80.000</div></div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Pilih Tanggal</div>
+  <div style="display:flex;gap:3px;margin-bottom:10px;"><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--st);"><div style="color:var(--tm);font-size:7px;font-weight:600;">Sen</div><div style="font-weight:700;font-size:9px;">9</div></div><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--p);"><div style="color:rgba(255,255,255,.8);font-size:7px;font-weight:600;">Sel</div><div style="font-weight:800;font-size:9px;color:white;">10</div></div><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--st);"><div style="color:var(--tm);font-size:7px;font-weight:600;">Rab</div><div style="font-weight:700;font-size:9px;">11</div></div><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--sm);"><div style="color:var(--tf);font-size:7px;font-weight:600;">Kam</div><div style="font-weight:700;font-size:9px;color:var(--tf);">12</div></div><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--st);"><div style="color:var(--tm);font-size:7px;font-weight:600;">Jum</div><div style="font-weight:700;font-size:9px;">13</div></div><div style="flex:1;text-align:center;padding:4px 1px;border-radius:8px;background:var(--st);"><div style="color:var(--tm);font-size:7px;font-weight:600;">Sab</div><div style="font-weight:700;font-size:9px;">14</div></div></div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Pilih Waktu</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px;"><div style="text-align:center;padding:5px 3px;border-radius:7px;border:1.5px solid var(--bd);font-size:9px;font-weight:600;cursor:pointer;">08.00</div><div style="text-align:center;padding:5px 3px;border-radius:7px;border:1.5px solid var(--bd);font-size:9px;font-weight:600;cursor:pointer;">09.00</div><div style="text-align:center;padding:5px 3px;border-radius:7px;background:var(--sm);border:1.5px solid var(--bd);font-size:9px;color:var(--tf);text-decoration:line-through;">10.00</div><div style="text-align:center;padding:5px 3px;border-radius:7px;background:var(--sm);border:1.5px solid var(--bd);font-size:9px;color:var(--tf);text-decoration:line-through;">11.00</div><div style="text-align:center;padding:5px 3px;border-radius:7px;border:2px solid var(--p);background:var(--ps);font-size:9px;font-weight:800;color:var(--p);cursor:pointer;">14.00 &#x2713;</div><div style="text-align:center;padding:5px 3px;border-radius:7px;border:1.5px solid var(--bd);font-size:9px;font-weight:600;cursor:pointer;">15.00</div></div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Mode Belajar</div>
+  <div style="display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--p);margin-bottom:10px;"><div style="flex:1;text-align:center;padding:6px;background:var(--p);font-size:9px;font-weight:700;color:white;cursor:pointer;">Tatap Muka</div><div style="flex:1;text-align:center;padding:6px;font-size:9px;font-weight:700;color:var(--p);cursor:pointer;">Online</div></div>
+  <div style="font-size:8.5px;font-weight:700;color:var(--tm);margin-bottom:4px;">Topik (opsional)</div>
+  <div style="height:34px;border:1.5px solid var(--bd);border-radius:8px;padding:0 10px;font-size:8.5px;color:var(--tf);display:flex;align-items:center;">Persiapan UTS limit dan turunan...</div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="pbtn" style="height:36px;font-size:11px;border-radius:10px;" data-nav="confirmed">Lanjut ke Pembayaran &#x2192;</div><div style="text-align:center;font-size:7.5px;color:var(--tf);margin-top:5px;">&#x1F512; Pembayaran aman via Midtrans</div></div>
+<div style="height:8px;"></div>
+</div>`,
+
+confirmed:()=>`<div style="background:white;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;text-align:center;">
+  <div class="ck-a" style="width:72px;height:72px;background:var(--oks);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;border:3px solid var(--ok);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <div style="font-size:15px;font-weight:800;color:var(--t);margin-bottom:6px;">Booking Berhasil! &#x1F389;</div>
+  <div style="font-size:9px;color:var(--tm);margin-bottom:20px;">Menunggu konfirmasi guru</div>
+  <div style="background:var(--wns);border:1px solid var(--wn);border-radius:12px;padding:12px 16px;margin-bottom:16px;width:100%;"><div style="font-size:8px;color:var(--wn);font-weight:700;margin-bottom:4px;">&#x23F1; Guru punya waktu untuk konfirmasi</div><div style="font-size:20px;font-weight:800;color:var(--wn);letter-spacing:-.01em;">23:59:12</div><div style="font-size:7.5px;color:var(--wn);margin-top:3px;">Auto-batal jika tidak dikonfirmasi</div></div>
+  <div style="background:var(--sm);border-radius:10px;padding:10px;width:100%;margin-bottom:20px;text-align:left;"><div style="font-size:9.5px;font-weight:700;color:var(--t);">Pak Ahmad Fauzi &#x00B7; Matematika SMP</div><div style="font-size:8px;color:var(--tm);margin-top:3px;">&#x1F4C5; Selasa, 10 Juni &#x00B7; 14.00&#x2013;15.00</div><div style="font-size:8px;color:var(--tm);margin-top:2px;">&#x1F4CD; Tatap Muka &#x00B7; Tebet</div></div>
+  <div class="pbtn" style="height:36px;font-size:11px;border-radius:10px;width:100%;cursor:pointer;" data-nav="my_courses">Lihat My Courses</div>
+  <div style="margin-top:10px;font-size:9px;font-weight:600;color:var(--p);cursor:pointer;" data-nav="home">Kembali ke Beranda</div>
+</div>`,
+
+my_courses:()=>`<div class="scrl">
+<div style="background:white;padding:10px 12px 0;"><div style="font-size:14px;font-weight:800;margin-bottom:10px;">My Courses</div><div style="display:flex;border-bottom:1px solid var(--bd);"><div style="flex:1;text-align:center;padding-bottom:8px;font-size:9.5px;font-weight:700;color:var(--p);border-bottom:2px solid var(--p);">Akan Datang</div><div style="flex:1;text-align:center;padding-bottom:8px;font-size:9.5px;font-weight:600;color:var(--tf);">Selesai</div></div></div>
+<div style="height:8px;"></div>
+<div style="background:white;border-radius:12px;margin:0 12px;padding:11px;box-shadow:0 2px 8px rgba(15,23,42,.06);cursor:pointer;" data-nav="session">
+  <div style="display:flex;align-items:flex-start;gap:9px;"><div style="position:relative;flex-shrink:0;"><div class="av" style="width:40px;height:40px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:13px;">AF</div><div class="bdg bt" style="position:absolute;bottom:-3px;right:-5px;font-size:6px;padding:1px 3px;border:1px solid white;">&#x2605;</div></div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="font-size:10px;font-weight:700;">Pak Ahmad Fauzi</span><span class="spill spt">Terjadwal</span></div><div style="font-size:8px;color:var(--tm);margin-bottom:1px;">Matematika &#x00B7; SMP</div><div style="font-size:8px;color:var(--tf);">&#x1F4C5; Sel, 10 Jun &#x00B7; 14.00&#x2013;15.00</div><div style="font-size:8px;color:var(--tf);">&#x1F4CD; Tatap Muka &#x00B7; Tebet</div></div></div>
+  <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;"><div style="background:var(--pf);border-radius:7px;padding:4px 8px;font-size:8px;color:var(--p);font-weight:600;">&#x23F0; 1 hari lagi</div><div style="font-size:8.5px;font-weight:700;color:var(--p);">Lihat Detail &#x2192;</div></div>
+</div>
+<div style="height:8px;"></div>
+<div style="background:white;border-radius:12px;margin:0 12px;padding:11px;box-shadow:0 2px 8px rgba(15,23,42,.06);">
+  <div style="display:flex;align-items:flex-start;gap:9px;"><div style="position:relative;flex-shrink:0;"><div class="av" style="width:40px;height:40px;background:linear-gradient(135deg,#10B981,#059669);font-size:13px;">SD</div><div class="bdg bv" style="position:absolute;bottom:-3px;right:-5px;font-size:6px;padding:1px 3px;border:1px solid white;">&#x2713;</div></div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="font-size:10px;font-weight:700;">Bu Sari Dewi</span><span class="spill spm">Menunggu</span></div><div style="font-size:8px;color:var(--tm);margin-bottom:1px;">Fisika &#x00B7; SMA</div><div style="font-size:8px;color:var(--tf);">&#x1F4C5; Rab, 11 Jun &#x00B7; 10.00&#x2013;11.00</div><div style="font-size:8px;color:var(--tf);">&#x1F4BB; Online</div></div></div>
+  <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--bd);"><div style="font-size:7.5px;color:var(--tf);">&#x23F1; Guru punya waktu 23:14:02 untuk konfirmasi</div></div>
+</div>
+<div style="height:8px;"></div>
+<div style="background:linear-gradient(135deg,var(--pf),var(--ps));border-radius:12px;margin:0 12px;padding:10px;border:1px solid var(--ps);"><div style="font-size:9px;font-weight:700;color:var(--p);margin-bottom:2px;">&#x1F4DA; Semangat belajar, Sarah!</div><div style="font-size:8px;color:var(--ph);line-height:1.4;">Kamu sudah punya 2 sesi minggu ini. Konsisten adalah kunci. &#x1F4AA;</div></div>
+<div style="height:8px;"></div>
+</div>`,
+
+session:()=>`<div class="scrl" style="background:var(--sm);">
+<div style="background:var(--ok);padding:8px 12px;text-align:center;"><div style="font-size:9.5px;font-weight:700;color:white;">&#x2713; Sesi Terjadwal &#x2014; Selasa, 10 Juni 2026</div></div>
+<div style="background:white;padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);"><span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span><span style="font-size:11px;font-weight:700;flex:1;text-align:center;">Detail Sesi</span><span style="width:16px;"></span></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div style="display:flex;align-items:center;gap:9px;"><div style="position:relative;"><div class="av" style="width:42px;height:42px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:14px;">AF</div><div class="bdg bt" style="position:absolute;bottom:-3px;right:-5px;font-size:6.5px;padding:1px 3px;border:1px solid white;">&#x2605;</div></div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Pak Ahmad Fauzi</div><div style="font-size:8px;color:var(--tm);margin-top:1px;">Matematika &#x00B7; Fisika</div></div></div><div style="margin-top:8px;padding:6px 8px;background:var(--oks);border-radius:8px;font-size:8.5px;color:var(--ok);font-weight:600;">&#x1F4AC; 0812-3456-7890 (aktif setelah booking dikonfirmasi)</div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:8px;align-items:center;"><span style="font-size:13px;">&#x1F4C5;</span><div><div style="font-size:8px;color:var(--tm);font-weight:600;">Tanggal</div><div style="font-size:9.5px;font-weight:700;">Selasa, 10 Juni 2026</div></div></div><div style="display:flex;gap:8px;align-items:center;"><span style="font-size:13px;">&#x23F0;</span><div><div style="font-size:8px;color:var(--tm);font-weight:600;">Waktu</div><div style="font-size:9.5px;font-weight:700;">14.00 &#x2013; 15.00 (60 menit)</div></div></div><div style="display:flex;gap:8px;align-items:center;"><span style="font-size:13px;">&#x1F4CD;</span><div><div style="font-size:8px;color:var(--tm);font-weight:600;">Lokasi</div><div style="font-size:9.5px;font-weight:700;">Tatap Muka &#x2014; Jl. Budi Utomo No. 12</div></div></div><div style="display:flex;gap:8px;align-items:center;"><span style="font-size:13px;">&#x1F4D6;</span><div><div style="font-size:8px;color:var(--tm);font-weight:600;">Topik</div><div style="font-size:9.5px;font-weight:700;">Persiapan UTS limit dan turunan</div></div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:var(--sm);border-radius:8px;margin:0 12px;height:72px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);"><span style="font-size:8.5px;color:var(--tf);">&#x1F5FA; Peta lokasi &#x00B7; Buka di Google Maps &#x2192;</span></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div style="background:var(--pf);border-radius:8px;padding:8px 10px;margin-bottom:10px;text-align:center;"><div style="font-size:8px;color:var(--tm);">Sesi dimulai dalam</div><div style="font-size:14px;font-weight:800;color:var(--p);">1 hari 4 jam 23 menit</div></div><div class="pbtn" style="height:36px;font-size:11px;border-radius:10px;opacity:.45;cursor:not-allowed;box-shadow:none;pointer-events:none;">Tandai Selesai</div><div style="text-align:center;font-size:7.5px;color:var(--tf);margin-top:5px;">Tombol aktif setelah waktu sesi berlalu</div></div>
+<div style="height:6px;"></div>
+<div style="text-align:center;font-size:8.5px;color:var(--er);font-weight:600;padding:8px;cursor:pointer;">Ada masalah dengan sesi ini?</div>
+</div>`,
+
+dashboard:()=>`<div class="scrl">
+<div style="background:white;padding:10px 12px 8px;"><div style="display:flex;align-items:flex-start;justify-content:space-between;"><div><div style="font-size:12px;font-weight:800;">Selamat pagi, Pak Ahmad &#x1F44B;</div><div style="margin-top:4px;"><span class="bdg bt">&#x2605; Trusted Teacher</span></div></div><div style="position:relative;flex-shrink:0;"><div style="width:30px;height:30px;border-radius:50%;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:14px;">&#x1F514;</div><div style="position:absolute;top:1px;right:1px;width:7px;height:7px;background:var(--er);border-radius:50%;border:1.5px solid white;"></div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><div class="stile"><div class="sv" style="color:var(--p);">2</div><div class="sl">Sesi Hari Ini</div></div><div class="stile" style="position:relative;"><div style="position:absolute;top:7px;right:8px;width:7px;height:7px;background:var(--er);border-radius:50%;"></div><div class="sv" style="color:var(--er);">1</div><div class="sl">Booking Masuk</div></div><div class="stile"><div class="sv" style="color:var(--ok);font-size:15px;">Rp 1,25 Jt</div><div class="sl">Earnings Bulan Ini</div></div><div class="stile"><div class="sv" style="color:var(--wn);">4.9&#x2605;</div><div class="sl">Rating Saya</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sh2"><span class="sttl">Booking Masuk</span><span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:7.5px;font-weight:700;background:var(--wns);color:var(--wn);">&#x23F1; Segera Respons</span></div><div style="border-radius:10px;border:1.5px solid var(--bds);border-left:4px solid var(--wn);padding:9px 10px;background:rgba(254,243,199,.4);cursor:pointer;" data-nav="book_req"><div style="font-size:10px;font-weight:700;margin-bottom:2px;">Murid Baru &#x00B7; Matematika SMP</div><div style="font-size:8px;color:var(--tm);margin-bottom:2px;">&#x1F4C5; Sel, 10 Jun &#x00B7; 13.00&#x2013;14.00 &#x00B7; Tatap Muka</div><div style="font-size:9px;font-weight:700;color:var(--wn);margin-bottom:7px;">&#x23F1; 22:47:13 tersisa &#x2014; Tap untuk lihat detail</div><div style="display:flex;gap:6px;"><div style="flex:1;text-align:center;padding:5px;background:var(--oks);border-radius:7px;font-size:9px;font-weight:700;color:var(--ok);cursor:pointer;" data-nav="book_req">&#x2713; Terima</div><div style="flex:1;text-align:center;padding:5px;background:var(--ers);border-radius:7px;font-size:9px;font-weight:700;color:var(--er);">&#x2715; Tolak</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sttl" style="margin-bottom:8px;">Aksi Cepat</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;" data-nav="reels_mgmt"><div style="width:38px;height:38px;border-radius:10px;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:17px;">&#x1F3AC;</div><div style="font-size:6.5px;font-weight:600;color:var(--tm);text-align:center;">Buat Reels</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;" data-nav="portfolio"><div style="width:38px;height:38px;border-radius:10px;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:17px;">&#x1F4CB;</div><div style="font-size:6.5px;font-weight:600;color:var(--tm);text-align:center;">Portfolio</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;" data-nav="t_sesi"><div style="width:38px;height:38px;border-radius:10px;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:17px;">&#x1F4C5;</div><div style="font-size:6.5px;font-weight:600;color:var(--tm);text-align:center;">Jadwal</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;" data-nav="earnings"><div style="width:38px;height:38px;border-radius:10px;background:var(--st);display:flex;align-items:center;justify-content:center;font-size:17px;">&#x1F4B0;</div><div style="font-size:6.5px;font-weight:600;color:var(--tm);text-align:center;">Tarik Dana</div></div></div></div>
+<div style="height:8px;"></div>
+</div>`,
+
+book_req:()=>`<div class="scrl" style="background:var(--sm);">
+<div style="background:var(--wn);padding:8px 12px;display:flex;align-items:center;justify-content:center;gap:6px;"><span style="font-size:9.5px;font-weight:700;color:white;">&#x23F1; Konfirmasi sebelum kedaluwarsa: <strong>21:33:07</strong></span></div>
+<div style="background:white;padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);"><span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span><span style="font-size:11px;font-weight:700;flex:1;text-align:center;">Permintaan Booking</span><span style="width:16px;"></span></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div style="font-size:8px;color:var(--tm);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Informasi Murid</div><div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:18px;">&#x1F464;</div><div><div style="font-size:9.5px;font-weight:600;color:var(--tm);font-style:italic;">Identitas tampil setelah dikonfirmasi</div><div style="margin-top:3px;"><span class="tag">SMP &#x00B7; Kelas 8</span></div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div style="font-size:8px;color:var(--tm);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Detail Sesi</div><div style="display:flex;flex-direction:column;gap:7px;"><div style="display:flex;gap:8px;"><span style="font-size:12px;">&#x1F4DA;</span><div><div style="font-size:8px;color:var(--tm);">Mata Pelajaran</div><div style="font-size:9.5px;font-weight:700;">Matematika &#x2014; Limit dan Turunan</div></div></div><div style="display:flex;gap:8px;"><span style="font-size:12px;">&#x1F4C5;</span><div><div style="font-size:8px;color:var(--tm);">Tanggal</div><div style="font-size:9.5px;font-weight:700;">Selasa, 10 Juni 2026</div></div></div><div style="display:flex;gap:8px;"><span style="font-size:12px;">&#x23F0;</span><div><div style="font-size:8px;color:var(--tm);">Waktu</div><div style="font-size:9.5px;font-weight:700;">13.00 &#x2013; 14.00 (60 menit)</div></div></div><div style="display:flex;gap:8px;"><span style="font-size:12px;">&#x1F4CD;</span><div><div style="font-size:8px;color:var(--tm);">Lokasi</div><div style="font-size:9.5px;font-weight:700;">Tatap Muka &#x00B7; Kecamatan Tebet &#x00B7; 2.1 km</div></div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:var(--st);margin:0 12px;border-radius:12px;padding:11px;border:1px solid var(--ps);"><div style="font-size:8px;color:var(--tm);font-weight:600;margin-bottom:4px;">Kamu akan menerima:</div><div style="font-size:22px;font-weight:800;color:var(--p);letter-spacing:-.02em;line-height:1;">Rp 68.000</div><div style="font-size:8px;color:var(--tm);margin-top:2px;">dari total Rp 80.000 &#x00B7; biaya platform 15%</div></div>
+<div style="height:12px;"></div>
+<div style="padding:0 12px;display:flex;flex-direction:column;gap:8px;"><div class="pbtn" style="height:42px;font-size:11px;border-radius:10px;background:var(--ok);box-shadow:0 4px 14px rgba(16,185,129,.22);cursor:pointer;" data-nav="dashboard">Terima Booking &#x2713;</div><div style="height:38px;background:var(--ers);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--er);cursor:pointer;" data-nav="back">Tolak Booking</div></div>
+<div style="height:8px;"></div>
+<div style="text-align:center;font-size:7.5px;color:var(--tf);padding:8px;">&#x1F4F1; Nomor HP murid hanya tampil setelah kamu konfirmasi</div>
+</div>`,
+
+t_sesi:()=>`<div class="scrl">
+<div style="background:white;padding:10px 12px 0;"><div style="font-size:14px;font-weight:800;margin-bottom:10px;">Sesi Saya</div><div style="display:flex;border-bottom:1px solid var(--bd);"><div style="flex:1;text-align:center;padding-bottom:8px;font-size:9.5px;font-weight:700;color:var(--p);border-bottom:2px solid var(--p);">Akan Datang</div><div style="flex:1;text-align:center;padding-bottom:8px;font-size:9.5px;font-weight:600;color:var(--tf);">Selesai (127)</div></div></div>
+<div style="height:8px;"></div>
+<div style="background:white;border-radius:12px;margin:0 12px;padding:11px;box-shadow:0 2px 8px rgba(15,23,42,.06);">
+  <div style="display:flex;align-items:flex-start;gap:9px;"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6366F1);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:12px;">A</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="font-size:10px;font-weight:700;">Murid A</span><span class="spill spt">Terjadwal</span></div><div style="font-size:8px;color:var(--tm);margin-bottom:1px;">Matematika &#x00B7; SMP &#x00B7; Limit &amp; Turunan</div><div style="font-size:8px;color:var(--tf);">&#x1F4C5; Sel, 10 Jun &#x00B7; 13.00&#x2013;14.00</div><div style="font-size:8px;color:var(--tf);">&#x1F4CD; Tatap Muka &#x00B7; Kec. Tebet &#x00B7; 2.1 km</div></div></div>
+  <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;"><div style="background:var(--pf);border-radius:7px;padding:4px 8px;font-size:8px;color:var(--p);font-weight:600;">&#x23F0; Hari ini, 4 jam lagi</div><div style="font-size:8.5px;font-weight:700;color:var(--p);">Detail &#x2192;</div></div>
+</div>
+<div style="height:8px;"></div>
+<div style="background:white;border-radius:12px;margin:0 12px;padding:11px;box-shadow:0 2px 8px rgba(15,23,42,.06);">
+  <div style="display:flex;align-items:flex-start;gap:9px;"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:12px;">B</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="font-size:10px;font-weight:700;">Murid B</span><span class="spill spt">Terjadwal</span></div><div style="font-size:8px;color:var(--tm);margin-bottom:1px;">Fisika &#x00B7; SMA &#x00B7; Gelombang &amp; Optik</div><div style="font-size:8px;color:var(--tf);">&#x1F4C5; Sel, 10 Jun &#x00B7; 16.00&#x2013;17.00</div><div style="font-size:8px;color:var(--tf);">&#x1F4BB; Online</div></div></div>
+  <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;"><div style="background:var(--pf);border-radius:7px;padding:4px 8px;font-size:8px;color:var(--p);font-weight:600;">&#x23F0; Hari ini, 7 jam lagi</div><div style="font-size:8.5px;font-weight:700;color:var(--p);">Detail &#x2192;</div></div>
+</div>
+<div style="height:8px;"></div>
+<div style="background:white;border-radius:12px;margin:0 12px;padding:11px;box-shadow:0 2px 8px rgba(15,23,42,.06);">
+  <div style="display:flex;align-items:flex-start;gap:9px;"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10B981,#059669);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:12px;">C</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;"><span style="font-size:10px;font-weight:700;">Murid C</span><span class="spill spm">Menunggu</span></div><div style="font-size:8px;color:var(--tm);margin-bottom:1px;">Matematika &#x00B7; SMA &#x00B7; Kalkulus</div><div style="font-size:8px;color:var(--tf);">&#x1F4C5; Rab, 11 Jun &#x00B7; 15.00&#x2013;16.00</div><div style="font-size:8px;color:var(--tf);">&#x1F4CD; Tatap Muka &#x00B7; Kec. Mampang</div></div></div>
+</div>
+<div style="height:8px;"></div>
+</div>`,
+
+reels_mgmt:()=>`<div class="scrl">
+<div style="background:white;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);"><span style="font-size:13px;font-weight:800;">Reelsku</span><div class="pbtn" style="padding:5px 10px;font-size:8.5px;border-radius:7px;height:auto;box-shadow:none;">+ Buat Reel</div></div>
+<div style="background:white;padding:5px 12px 6px;border-bottom:1px solid var(--bd);"><span style="font-size:8px;color:var(--tm);font-weight:600;">8 reels &#x00B7; 12.400 tayangan &#x00B7; 847 profil dikunjungi</span></div>
+<div style="margin:8px 12px 0;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-radius:12px;padding:10px;border:1px solid #BFDBFE;">
+  <div style="font-size:9.5px;font-weight:800;color:var(--p);margin-bottom:3px;">&#x1F4A1; Makin aktif = Makin sering muncul</div>
+  <div style="font-size:8px;color:var(--tm);margin-bottom:8px;line-height:1.4;">Aktivitas reels adalah <strong style="color:var(--p);">sinyal di algoritma AI Bimbel.in</strong> &#x2014; guru yang aktif upload diprioritaskan di feed &amp; pencarian murid.</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;"><span style="font-size:8px;font-weight:700;color:var(--p);">Milestone: 8/10 reels</span><span style="font-size:8px;font-weight:700;color:var(--p);">80%</span></div>
+  <div style="height:6px;background:rgba(255,255,255,.6);border-radius:3px;overflow:hidden;"><div style="height:100%;width:80%;background:var(--p);border-radius:3px;"></div></div>
+  <div style="font-size:7.5px;color:#1D4ED8;margin-top:4px;font-weight:700;">&#x1F3AF; 2 reels lagi &#x2192; Prioritas di feed murid!</div>
+</div>
+<div style="padding:8px 12px 12px;"><div class="sh2" style="margin-bottom:7px;"><span class="sttl">Reels Saya</span><span class="slnk">Kelola &#x2192;</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+<div style="border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(145deg,#1A3374,#3B82F6);position:relative;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:rgba(255,255,255,.1);">&#x221E;</div><div style="position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);border-radius:99px;padding:1px 6px;font-size:6.5px;font-weight:700;color:white;">Matematika</div><div style="position:absolute;bottom:5px;left:5px;font-size:8px;color:white;font-weight:600;">&#x25B6; 1.2K &#x1F90D; 89</div></div>
+<div style="border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(145deg,#3B0764,#7C3AED);position:relative;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:rgba(255,255,255,.1);">F=ma</div><div style="position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);border-radius:99px;padding:1px 6px;font-size:6.5px;font-weight:700;color:white;">Fisika</div><div style="position:absolute;bottom:5px;left:5px;font-size:8px;color:white;font-weight:600;">&#x25B6; 847 &#x1F90D; 64</div></div>
+<div style="border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(145deg,#064E3B,#10B981);position:relative;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:rgba(255,255,255,.1);">x&#xB2;</div><div style="position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);border-radius:99px;padding:1px 6px;font-size:6.5px;font-weight:700;color:white;">Matematika</div><div style="position:absolute;bottom:5px;left:5px;font-size:8px;color:white;font-weight:600;">&#x25B6; 2.1K &#x1F90D; 147</div></div>
+<div style="border-radius:10px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(145deg,#78350F,#F59E0B);position:relative;"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:rgba(255,255,255,.1);">pH</div><div style="position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);border-radius:99px;padding:1px 6px;font-size:6.5px;font-weight:700;color:white;">Kimia</div><div style="position:absolute;bottom:5px;left:5px;font-size:8px;color:white;font-weight:600;">&#x25B6; 634 &#x1F90D; 41</div></div>
+</div></div>
+</div>`,
+
+portfolio:()=>`<div class="scrl">
+<div style="background:var(--st);border-bottom:1px solid #BFDBFE;padding:5px 12px;font-size:7.5px;color:#1E40AF;text-align:center;font-weight:700;">&#x1F441;&#xFE0F; Tampilan publik &#x2014; murid, sekolah, penilai PPPK</div>
+<div style="background:white;padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);"><span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span><span style="font-size:11px;font-weight:700;flex:1;text-align:center;">Portofolioku</span><span style="font-size:9px;font-weight:700;color:var(--p);cursor:pointer;">Bagikan &#x2192;</span></div>
+<div style="background:white;padding:12px;display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="position:relative;display:inline-block;"><div class="av" style="width:52px;height:52px;background:linear-gradient(135deg,#38BDF8,#2563EB,#4F46E5);font-size:17px;">AF</div><div class="bdg bt" style="position:absolute;bottom:-3px;right:-6px;font-size:7px;padding:1px 4px;border:1.5px solid white;">&#x2605; Trusted</div></div><div style="font-size:13.5px;font-weight:800;letter-spacing:-.01em;">Pak Ahmad Fauzi</div><div style="font-size:8px;color:var(--tm);">SMPN 12 Jakarta Selatan &#x00B7; 8 tahun mengajar</div><div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:center;"><span class="tag">Matematika</span><span class="tag">Fisika</span><span class="tag">SMP</span><span class="tag">SMA</span></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><div class="stile"><div class="sv" style="color:var(--p);">127</div><div class="sl">Total Sesi</div></div><div class="stile"><div class="sv" style="color:var(--p);">43</div><div class="sl">Total Murid</div></div><div class="stile"><div class="sv" style="color:var(--ok);">78%</div><div class="sl">Repeat Booking</div></div><div class="stile"><div class="sv" style="color:var(--wn);">4.9&#x2605;</div><div class="sl">Avg Rating</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:10px 12px;"><div class="sttl" style="margin-bottom:9px;">Pencapaian Badge</div><div style="display:flex;align-items:center;justify-content:space-between;position:relative;padding:0 4px;"><div style="position:absolute;left:26px;right:26px;top:16px;height:3px;z-index:1;border-radius:2px;overflow:hidden;"><div style="height:100%;background:linear-gradient(to right,var(--ok) 0%,var(--ok) 50%,var(--wn) 50%,var(--wn) 100%);"></div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2;"><div style="width:32px;height:32px;border-radius:50%;background:var(--ok);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;box-shadow:0 0 0 3px var(--oks);">&#x2713;</div><div style="font-size:7px;font-weight:700;color:var(--ok);">Verified</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2;"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:13px;color:white;box-shadow:0 0 0 3px var(--ps);">&#x26A1;</div><div style="font-size:7px;font-weight:700;color:var(--p);">Active</div></div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2;"><div style="width:32px;height:32px;border-radius:50%;background:var(--wn);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;box-shadow:0 0 0 3px var(--wns);">&#x2B50;</div><div style="font-size:7px;font-weight:700;color:var(--wn);">Trusted</div><div style="font-size:7px;font-weight:700;color:var(--ok);">&#x1F389; Terbuka!</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sh2"><span class="sttl">Ulasan Terverifikasi</span><span class="slnk">47 &#x2192;</span></div><div style="font-size:8.5px;border-bottom:1px solid var(--bd);padding-bottom:6px;margin-bottom:6px;"><div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><div class="av" style="width:18px;height:18px;background:#6366F1;font-size:7px;">A</div><strong>Orang Tua Murid A</strong><span style="color:var(--wn);font-size:9px;"> &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</span></div><span style="color:var(--t);">"Pak Ahmad sabar, nilai anak saya naik signifikan setelah 1 bulan."</span></div><div style="font-size:8.5px;"><div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;"><div class="av" style="width:18px;height:18px;background:#0EA5E9;font-size:7px;">B</div><strong>Budi S.</strong><span style="color:var(--wn);font-size:9px;"> &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</span></div><span style="color:var(--t);">"Cara mengajar menyenangkan. Highly recommended!"</span></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sttl" style="margin-bottom:5px;">Bagikan Portfolio</div><div style="font-size:8px;color:var(--tm);background:var(--st);border-radius:7px;padding:5px 8px;margin-bottom:7px;font-family:monospace;">bimbel.in/guru/ahmad-fauzi</div><div style="display:flex;gap:6px;margin-bottom:5px;"><div class="sbtn" style="flex:1;padding:6px;display:flex;align-items:center;justify-content:center;gap:3px;">&#x1F4CB; Salin Link</div><div style="flex:1;background:var(--ok);color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;padding:6px;gap:3px;cursor:pointer;">&#x1F4AC; Share WA</div></div><div style="text-align:center;font-size:7.5px;color:var(--tf);">Gunakan untuk lamaran <strong style="color:var(--t);">PPPK</strong> atau sekolah swasta</div></div>
+<div style="height:8px;"></div>
+</div>`,
+
+t_profil:()=>`<div class="scrl">
+<div style="background:white;padding:8px 12px;font-size:14px;font-weight:800;border-bottom:1px solid var(--bd);">Profil &amp; Pengaturan</div>
+<div style="background:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bd);">
+  <div class="av" style="width:46px;height:46px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);font-size:15px;">AF</div>
+  <div style="flex:1;"><div style="font-size:11px;font-weight:800;">Pak Ahmad Fauzi</div><div style="margin-top:3px;"><span class="bdg bt">&#x2605; Trusted Teacher</span></div></div>
+  <div style="font-size:9px;font-weight:700;color:var(--p);cursor:pointer;white-space:nowrap;" data-nav="portfolio">Lihat Portfolio &#x2192;</div>
+</div>
+<div style="height:6px;"></div>
+<div style="background:white;">
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x270F;&#xFE0F;</span><span class="mlbl">Edit Profil &amp; Bio</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F4B0;</span><span class="mlbl">Tarif &amp; Jadwal</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;color:var(--tm);">Rp 80.000/sesi</span><span class="mchv">${I.chv}</span></div></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x2705;</span><span class="mlbl">Verifikasi Dokumen</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:8px;font-weight:700;color:var(--ok);">Terverifikasi</span><span class="mchv">${I.chv}</span></div></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F3E6;</span><span class="mlbl">Rekening Pencairan</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;color:var(--tm);">BCA ****7890</span><span class="mchv">${I.chv}</span></div></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F514;</span><span class="mlbl">Notifikasi</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x2753;</span><span class="mlbl">Bantuan &amp; FAQ</span></div><span class="mchv">${I.chv}</span></div>
+  <div class="mrow" style="border-bottom:none;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">&#x1F6AA;</span><span class="mlbl" style="color:var(--er);">Keluar</span></div></div>
+</div>
+<div style="height:8px;"></div>
+<div style="padding:0 12px 12px;"><div style="background:linear-gradient(135deg,var(--pf),var(--ps));border-radius:12px;padding:10px;border:1px solid var(--ps);"><div style="font-size:9px;font-weight:700;color:var(--p);margin-bottom:2px;">&#x1F4CA; Portfolio Publik Aktif</div><div style="font-size:8px;color:var(--ph);line-height:1.4;">127 sesi terverifikasi &#x00B7; Rating 4.9 &#x00B7; Trusted badge aktif</div><div style="font-size:8px;font-weight:700;color:var(--p);margin-top:4px;cursor:pointer;" data-nav="portfolio">Lihat &amp; Bagikan Portfolio &#x2192;</div></div></div>
+</div>`,
+
+earnings:()=>`<div class="scrl">
+<div style="background:white;padding:10px 12px;border-bottom:1px solid var(--bd);"><div style="display:flex;align-items:center;gap:8px;"><span style="cursor:pointer;color:var(--tm);" data-nav="back">${I.back}</span><span style="font-size:14px;font-weight:800;flex:1;text-align:center;">Pendapatanku</span><span style="width:16px;"></span></div></div>
+<div style="padding:8px 12px;background:white;display:flex;align-items:center;justify-content:center;gap:12px;border-bottom:1px solid var(--bd);"><span style="font-size:16px;color:var(--bds);cursor:pointer;">&#x2190;</span><span style="font-size:11px;font-weight:700;">Juni 2026</span><span style="font-size:16px;color:var(--bd);">&#x2192;</span></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:11px 12px;"><div style="background:var(--st);border-left:4px solid var(--p);border-radius:10px;padding:12px;margin-bottom:8px;"><div style="font-size:8px;color:var(--tm);margin-bottom:4px;">Bulan Ini</div><div style="font-size:24px;font-weight:800;color:var(--p);letter-spacing:-.02em;line-height:1;">Rp 1.250.000</div><div style="font-size:8px;color:var(--tm);margin-top:3px;">dari 8 sesi selesai</div><div style="font-size:8px;color:var(--ok);margin-top:3px;font-weight:700;">&#x2191; 23% dari Mei 2026</div></div><div style="background:var(--wns);border-radius:8px;padding:8px 10px;"><div style="font-size:8.5px;font-weight:700;color:var(--wn);">&#x23F3; Rp 150.000 menunggu konfirmasi murid</div><div style="font-size:7.5px;color:var(--wn);margin-top:2px;">Auto-cair dalam 18:42:11</div></div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div class="sh2"><span class="sttl">Riwayat Sesi</span><span class="slnk">Lihat semua &#x2192;</span></div>
+<div style="display:flex;flex-direction:column;gap:0;">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);"><div><div style="font-size:9px;font-weight:700;">Murid A &#x00B7; Matematika SMP</div><div style="font-size:7.5px;color:var(--tf);">7 Jun 2026</div></div><div style="text-align:right;"><div style="font-size:9.5px;font-weight:700;color:var(--ok);">Rp 68.000</div><span class="spill sps" style="font-size:7px;">Cair</span></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);"><div><div style="font-size:9px;font-weight:700;">Murid B &#x00B7; Fisika SMA</div><div style="font-size:7.5px;color:var(--tf);">5 Jun 2026</div></div><div style="text-align:right;"><div style="font-size:9.5px;font-weight:700;color:var(--ok);">Rp 76.500</div><span class="spill sps" style="font-size:7px;">Cair</span></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);"><div><div style="font-size:9px;font-weight:700;">Murid C &#x00B7; Matematika SMP</div><div style="font-size:7.5px;color:var(--tf);">3 Jun 2026</div></div><div style="text-align:right;"><div style="font-size:9.5px;font-weight:700;color:var(--ok);">Rp 68.000</div><span class="spill sps" style="font-size:7px;">Cair</span></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;"><div><div style="font-size:9px;font-weight:700;">Murid D &#x00B7; Kimia SMA</div><div style="font-size:7.5px;color:var(--tf);">1 Jun 2026</div></div><div style="text-align:right;"><div style="font-size:9.5px;font-weight:700;color:var(--t);">Rp 85.000</div><span class="spill spm" style="font-size:7px;">Pending</span></div></div>
+</div></div>
+<div style="height:6px;"></div>
+<div style="background:white;padding:9px 12px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid var(--bd);border-radius:10px;overflow:hidden;"><div style="padding:8px;border-right:1px solid var(--bd);text-align:center;"><div style="font-size:11px;font-weight:800;color:var(--p);">Rp 8,24 Jt</div><div style="font-size:7px;color:var(--tf);">Total</div></div><div style="padding:8px;border-right:1px solid var(--bd);text-align:center;"><div style="font-size:11px;font-weight:800;color:var(--p);">127</div><div style="font-size:7px;color:var(--tf);">Sesi</div></div><div style="padding:8px;text-align:center;"><div style="font-size:11px;font-weight:800;color:var(--ok);">94%</div><div style="font-size:7px;color:var(--tf);">Completion</div></div></div></div>
+<div style="height:6px;"></div>
+<div style="padding:0 12px 12px;"><div class="pbtn" style="height:38px;font-size:11px;border-radius:10px;">Tarik Dana</div><div style="text-align:center;font-size:7.5px;color:var(--tf);margin-top:5px;">Minimum penarikan Rp 50.000 &#x00B7; Saldo: Rp 1.250.000</div></div>
+</div>`,
+
+};
+
+// ─── ROUTER ───
+let hist=[],cur='home';
+function go(id,dir){
+  if(!S[id])return;
+  const cfg=CFG[id];
+  const scr=document.getElementById('scr');
+  const bnav=document.getElementById('bnav');
+  const sbar=document.getElementById('sbar');
+  scr.innerHTML=S[id]();
+  void scr.offsetHeight;
+  scr.className=dir==='back'?'sb2':'si';
+  if(cfg.nav){
+    bnav.style.display='flex';
+    scr.style.bottom='52px';
+    bnav.innerHTML=cfg.nav==='student'?navS(cfg.a):navT(cfg.a);
+    bnav.className=cfg.dk?'dnv':'lnv';
+    sbar.className=cfg.dk?'d':'l';
+  }else{
+    bnav.style.display='none';
+    scr.style.bottom='0';
+    sbar.className='l';
+  }
+  document.getElementById('slbl').textContent=cfg.lbl;
+  const isT=['dashboard','book_req','reels_mgmt','portfolio','earnings','t_sesi','t_profil'].includes(id);
+  document.getElementById('ms').classList.toggle('on',!isT);
+  document.getElementById('mt').classList.toggle('on',isT);
+  cur=id;
+}
+function navigate(id){
+  if(id==='back'){if(hist.length){const p=hist.pop();go(p,'back');}return;}
+  if(id===cur)return;
+  hist.push(cur);go(id,'fwd');
+}
+function setMode(m){hist=[];navigate(m==='student'?'home':'dashboard');}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-nav]');
+  if(t)navigate(t.dataset.nav);
+});
+
+// ─── FIGMA MODE ───
+const FS=[
+  {id:'home',    lbl:'1. Student Home',    sb:'l',nav:true, nt:'student',na:'home',    dk:false},
+  {id:'reels',   lbl:'2. Reels Feed',      sb:'d',nav:true, nt:'student',na:'reels',   dk:true},
+  {id:'profile', lbl:'3. Teacher Profile', sb:'l',nav:true, nt:'student',na:'cari',    dk:false},
+  {id:'booking', lbl:'4. Booking',         sb:'l',nav:false},
+  {id:'confirmed',lbl:'5. Confirmed',      sb:'l',nav:false},
+  {id:'my_courses',lbl:'6. My Courses',    sb:'l',nav:true, nt:'student',na:'kursus',  dk:false},
+  {id:'session', lbl:'7. Session Detail',  sb:'l',nav:false},
+  {id:'cari',    lbl:'8. Cari Guru',       sb:'l',nav:true, nt:'student',na:'cari',    dk:false},
+  {id:'s_profil',lbl:'9. Student Profile', sb:'l',nav:true, nt:'student',na:'profil',  dk:false},
+  {id:'dashboard',lbl:'10. Dashboard',     sb:'l',nav:true, nt:'teacher',na:'home',    dk:false},
+  {id:'book_req',lbl:'11. Booking Request',sb:'l',nav:false},
+  {id:'reels_mgmt',lbl:'12. Reels',        sb:'l',nav:true, nt:'teacher',na:'reels',   dk:false},
+  {id:'portfolio',lbl:'13. Portfolio',     sb:'l',nav:true, nt:'teacher',na:'portfolio',dk:false},
+  {id:'earnings',lbl:'14. Earnings',       sb:'l',nav:true, nt:'teacher',na:'home',    dk:false},
+  {id:'t_sesi',  lbl:'15. Sesi Saya',      sb:'l',nav:true, nt:'teacher',na:'sesi',    dk:false},
+  {id:'t_profil',lbl:'16. Teacher Profile',sb:'l',nav:true, nt:'teacher',na:'profil',  dk:false},
+];
+
+function buildFigma(){
+  const w=document.getElementById('fgrid-wrap');
+  const stud=FS.filter((_,i)=>i<9);
+  const teach=FS.filter((_,i)=>i>=9);
+  function sec(screens,title){
+    return `<div class="fsec">${title}</div><div class="fgrid">${screens.map(s=>{
+      const nv=s.nav?`<div class="fnav ${s.dk?'dnv':'lnv'}">${s.nt==='student'?navS(s.na):navT(s.na)}</div>`:'';
+      return `<div class="ffrm"><div class="flbl">${s.lbl}</div><div class="fphone"><div class="fsb ${s.sb}"><span>09:41</span><div style="display:flex;gap:3px;font-size:8px;"><span>&#x25B2;</span><span>&#x25C4;</span><span>&#x25CF;&#x25CF;&#x25CF;</span></div></div><div class="fcnt${s.nav?'':' nn'}">${S[s.id]()}</div>${nv}</div></div>`;
+    }).join('')}</div>`;
+  }
+  w.innerHTML=sec(stud,'Student Screens (9)')+sec(teach,'Teacher Screens (7)');
+}
+
+let figma=false;
+function toggleFigma(){
+  figma=!figma;
+  document.getElementById('iw').style.display=figma?'none':'flex';
+  document.getElementById('fw').style.display=figma?'block':'none';
+  document.getElementById('ftbtn').textContent=figma?'&#x2190; Back':'Figma Mode &#x2197;';
+  if(figma)buildFigma();
+}
+
+go('home','fwd');
+</script>
+</body>
+</html>
